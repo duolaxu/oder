@@ -1,7 +1,6 @@
 <template>
   <div class="header_container">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{
         item
       }}</el-breadcrumb-item>
@@ -11,8 +10,6 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="changeHeadImg">
-            <!-- <UploadImg> 修改头像 </UploadImg> -->
-            <!-- 修改头像 -->
             <UploadImg
               :isShowImg="isShowImg"
               :type="status"

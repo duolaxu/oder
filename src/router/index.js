@@ -17,14 +17,14 @@ const routes = [
 		component: Login
 	},
 	{
-		path: '/manage',
+		path: '/home',
 		component: Manage,
 		name: 'Manage',
 		children: [{
 			path: '/home',
 			component: Home,
 			name: "Home",
-			meta: [],
+			meta: ["首页"],
 		}, {
 			path: '/merchantList',
 			component: MerchantList,
