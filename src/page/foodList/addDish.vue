@@ -22,8 +22,16 @@
             <UploadImg :type="status.dishImg" />
           </el-form-item>
           <el-form-item class="button_submit">
-            <el-button type="primary" @click="submitForm(formData)"
-              >立即添加</el-button
+            <el-button
+              type="primary"
+              @click="submitForm('formData', formData)"
+              class="elBtn_1"
+              >添加</el-button
+            >
+            <el-button
+              @click="() => this.$emit('getDish', 'close')"
+              class="elBtn_2"
+              >取消</el-button
             >
           </el-form-item>
         </el-form>
@@ -52,7 +60,7 @@ export default {
         ],
         dishPrice: [{ required: true, message: "请输入菜品价格" }],
         dishImg: [
-          { required: true, message: "请上传菜品图片", trigger: "blur" },
+          { required: false, message: "请上传菜品图片", trigger: "blur" },
         ],
       },
     };
@@ -62,15 +70,22 @@ export default {
   },
   mounted() {},
   methods: {
-    submitForm(data) {
-      addNewDish("/addNewDish", {
-        dishName: data.dishName,
-        dishType: data.dishType,
-        dishPrice: data.dishPrice,
-        dishImg: this.$store.state.dishImg,
-        storeId: this.storeId,
-      }).then((res) => {
-        this.$emit("getDish", res); // 通知父组件重新拉取数据
+    submitForm(formName, data) {
+      this.$refs[formName].validate((valid) => {
+        // 表单验证
+        if (valid) {
+          addNewDish("/addNewDish", {
+            dishName: data.dishName,
+            dishType: data.dishType,
+            dishPrice: data.dishPrice,
+            dishImg: this.$store.state.dishImg,
+            storeId: this.storeId,
+          }).then((res) => {
+            this.$emit("getDish", res); // 通知父组件重新拉取数据
+          });
+        } else {
+          return false;
+        }
       });
     },
   },
@@ -79,7 +94,8 @@ export default {
   
   <style scoped>
 .button_submit {
-  text-align: center;
+}
+.elBtn_1 {
 }
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

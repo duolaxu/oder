@@ -6,7 +6,7 @@
     <el-dialog title="添加商铺" v-model="dialogShow">
       <add-shop @getMerchants="getMerchants"></add-shop>
     </el-dialog>
-    <div class="table_container" >
+    <div class="table_container">
       <el-table
         :data="tableData"
         highlight-current-row
@@ -73,12 +73,16 @@ export default {
       this.dialogShow = !this.dialogShow;
     },
     handleCurrentChange() {},
-    getMerchants() {
-      getStoreList("/getStoreList").then((res) => {
-        this.tableData = res.data.data;
-        this.count = res.data.data.length;
-        this.dialogShow = !this.dialogShow;
-      });
+    getMerchants(data) {
+      if (data == "close") {
+        this.dialogShow = false;
+      } else {
+        getStoreList("/getStoreList").then((res) => {
+          this.tableData = res.data.data;
+          this.count = res.data.data.length;
+          this.dialogShow = !this.dialogShow;
+        });
+      }
     },
   },
 };

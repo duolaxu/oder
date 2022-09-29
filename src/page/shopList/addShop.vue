@@ -75,8 +75,13 @@
             <UploadImg :type="status.cateringLicense" />
           </el-form-item>
           <el-form-item class="button_submit">
-            <el-button type="primary" @click="submitForm(formData)"
-              >立即创建</el-button
+            <el-button type="primary" @click="submitForm('formData')"
+              >确定</el-button
+            >
+            <el-button
+              type="primary"
+              @click="this.$emit('getMerchants', 'close')"
+              >取消</el-button
             >
           </el-form-item>
         </el-form>
@@ -107,13 +112,13 @@ export default {
           { type: "number", message: "电话号码必须是数字" },
         ],
         storeHeadImg: [
-          { required: true, message: "请上传店铺头像", trigger: "blur" },
+          { required: false, message: "请上传店铺头像", trigger: "blur" },
         ],
         storeBusinessImg: [
-          { required: true, message: "请上传店铺营业执照", trigger: "blur" },
+          { required: false, message: "请上传店铺营业执照", trigger: "blur" },
         ],
         cateringLicense: [
-          { required: true, message: "请上传餐饮服务许可证", trigger: "blur" },
+          { required: false, message: "请上传餐饮服务许可证", trigger: "blur" },
         ],
       },
     };
@@ -123,17 +128,24 @@ export default {
   },
   mounted() {},
   methods: {
-    submitForm(data) {
-      addNewStore("/addNewStore", {
-        storeName: data.storeName,
-        storeLocation: data.storeLocation,
-        storeConnection: data.storeConnection,
-        storeOpeningHours: `${data.startTime}-${data.endTime}`,
-        storeHeadImg: this.$store.state.storeHeadImg,
-        storeBusinessImg: this.$store.state.storeBusinessImg,
-        cateringLicense: this.$store.state.cateringLicense,
-      }).then(() => {
-        this.$emit("getMerchants", "update"); // 通知父组件重新拉取数据
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let data = this.formData;
+          addNewStore("/addNewStore", {
+            storeName: data.storeName,
+            storeLocation: data.storeLocation,
+            storeConnection: data.storeConnection,
+            storeOpeningHours: `${data.startTime}-${data.endTime}`,
+            storeHeadImg: this.$store.state.storeHeadImg,
+            storeBusinessImg: this.$store.state.storeBusinessImg,
+            cateringLicense: this.$store.state.cateringLicense,
+          }).then(() => {
+            this.$emit("getMerchants", "update"); // 通知父组件重新拉取数据
+          });
+        } else {
+          return false;
+        }
       });
     },
   },

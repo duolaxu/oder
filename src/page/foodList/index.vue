@@ -71,11 +71,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog
-        v-model="dialogVisible"
-        width="30%"
-        :before-close="handleClose"
-      >
+      <el-dialog v-model="dialogVisible" width="30%">
         <span>确定要将该菜品{{ dishStatus }}吗？</span>
         <template #footer>
           <span class="dialog-footer">
@@ -96,26 +92,26 @@
       </div>
       <div v-if="dialogFormVisible">
         <el-dialog title="修改食品信息" v-model="dialogFormVisible">
-          <el-form :model="selectTable">
-            <el-form-item label="食品名称" label-width="100px">
+          <el-form :model="selectTable" :rules="rules" ref="selectTable">
+            <el-form-item label="食品名称" prop="dishName" label-width="100px">
               <el-input
                 v-model="selectTable.dishName"
                 auto-complete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="食品分类" label-width="100px">
+            <el-form-item label="食品分类" prop="dishType" label-width="100px">
               <el-input
                 v-model="selectTable.dishType"
                 auto-complete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="食品图片" label-width="100px">
+            <el-form-item label="食品图片" prop="dishImg" label-width="100px">
               <UploadImg
                 :imgPath="selectTable.dishImg"
                 :type="status.dishImg"
               />
             </el-form-item>
-            <el-form-item label="食品价格" label-width="100px">
+            <el-form-item label="食品价格" prop="dishPrice" label-width="100px">
               <el-input
                 v-model="selectTable.dishPrice"
                 auto-complete="off"
@@ -123,8 +119,10 @@
             </el-form-item>
           </el-form>
           <div class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="updateDish">确 定</el-button>
+            <el-button @click="handleCancle()">取 消</el-button>
+            <el-button type="primary" @click="updateDish('selectTable')"
+              >确 定</el-button
+            >
           </div>
         </el-dialog>
       </div>
@@ -154,7 +152,32 @@ export default {
       dialogFormVisible: false,
       count: 1,
       selectTable: {},
+      rules: {
+        dishName: [
+          { required: true, message: "请输入食品名称", trigger: "blur" },
+        ],
+        dishType: [
+          { required: true, message: "请输入食品分类", trigger: "blur" },
+        ],
+        dishPrice: [{ required: true, message: "请输入菜品价格" }],
+        dishImg: [
+          { required: false, message: "请上传菜品图片", trigger: "blur" },
+        ],
+      },
     };
+  },
+  watch: {
+    dialogFormVisible(value) {
+      if (!value) {
+        getDishList("/getDishList", {
+          storeId: this.storeId,
+        }).then((res) => {
+          this.tableData = res.data.data;
+          this.count = res.data.data.length;
+          // this.dialogShow = !this.dialogShow;
+        });
+      }
+    },
   },
   created() {
     getDishList("/getDishList", {
@@ -170,43 +193,64 @@ export default {
     AddDish,
   },
   methods: {
-    getDish() {
-      getDishList("/getDishList", {
-        storeId: this.storeId,
-      }).then((res) => {
-        this.tableData = res.data.data;
-        this.count = res.data.data.length;
+    getDish(data) {
+      if (data == "close") {
         this.dialogShow = !this.dialogShow;
-      });
+      } else {
+        this.dialogShow = !this.dialogShow;
+        // getDishList("/getDishList", {
+        //   storeId: this.storeId,
+        // }).then((res) => {
+        //   this.tableData = res.data.data;
+        //   this.count = res.data.data.length;
+        //   this.dialogShow = !this.dialogShow;
+        // });
+      }
     },
     setDialogShow() {
       this.dialogShow = !this.dialogShow;
     },
     expand() {},
-    updateDish() {
-      updateDish("/updateDish", {
-        dishId: this.selectTable.dishId,
-        dishName: this.selectTable.dishName,
-        dishPrice: this.selectTable.dishPrice,
-        dishType: this.selectTable.dishType,
-        dishImg: this.$store.state.dishImg,
-        storeId: this.storeId,
-        dishScore: this.selectTable.dishScore,
-        dishMonthSales: this.selectTable.dishMonthSales,
-      }).then(() => {
-        this.dialogFormVisible = false;
-        getDishList("/getDishList", {
-          storeId: this.storeId,
-        }).then((res) => {
-          this.tableData = res.data.data;
-          this.count = res.data.data.length;
-        });
+    updateDish(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          updateDish("/updateDish", {
+            dishId: this.selectTable.dishId,
+            dishName: this.selectTable.dishName,
+            dishPrice: this.selectTable.dishPrice,
+            dishType: this.selectTable.dishType,
+            dishImg: this.$store.state.dishImg,
+            storeId: this.storeId,
+            dishScore: this.selectTable.dishScore,
+            dishMonthSales: this.selectTable.dishMonthSales,
+          }).then(() => {
+            this.dialogFormVisible = false;
+            // getDishList("/getDishList", {
+            //   storeId: this.storeId,
+            // }).then((res) => {
+            //   this.tableData = res.data.data;
+            //   this.count = res.data.data.length;
+            // });
+          });
+        } else {
+          return false;
+        }
       });
+    },
+    handleCancle() {
+      // getDishList("/getDishList", {
+      //   storeId: this.storeId,
+      // }).then((res) => {
+      //   this.tableData = res.data.data;
+      //   this.count = res.data.data.length;
+      this.dialogFormVisible = false;
+      // });
     },
     handleCurrentChange() {},
     handleEdit(data) {
       this.dialogFormVisible = true;
       this.selectTable = data;
+      this.$store.commit("updateDishImg", data.dishImg);
     },
     handleChange(index, data) {
       this.dishData = data;
