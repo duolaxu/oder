@@ -53,3 +53,15 @@ export const changeDishStatus = async (path, data) => {
     const res = axios.post(`${baseUrl}${path}`, data);
     return res;
 }
+
+// 获取食品分类列表
+export const getDishTypeList = async (path, data) => {
+    const res = axios.post(`${baseUrl}${path}`, data);
+    return res;
+}
+
+// 更新菜品序号
+export const updateDishSerial = async (path, data) => {
+    const res = axios.post(`${baseUrl}${path}`, data);
+    return res;
+}

@@ -13,7 +13,22 @@
             <el-input v-model="formData.dishName"></el-input>
           </el-form-item>
           <el-form-item label="食品分类" prop="dishType">
-            <el-input v-model="formData.dishType"></el-input>
+            <el-select
+              v-model="formData.dishType"
+              filterable
+              :multiple="false"
+              allow-create
+              default-first-option
+              :reserve-keyword="false"
+              placeholder="选择或添加食品分类"
+            >
+              <el-option
+                v-for="item in dishTypeList"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="食品价格" prop="dishPrice">
             <el-input v-model="formData.dishPrice"></el-input>
@@ -38,7 +53,7 @@
   <script>
 import UploadImg from "../../components/uploadImg";
 import { imgStatus } from "../../static";
-import { addNewDish } from "../../api";
+import { addNewDish, getDishTypeList } from "../../api";
 export default {
   data() {
     return {
@@ -58,12 +73,22 @@ export default {
           { required: false, message: "请上传菜品图片", trigger: "blur" },
         ],
       },
+      dishTypeList: [],
     };
   },
   components: {
     UploadImg,
   },
-  mounted() {},
+  mounted() {
+    getDishTypeList("/getDishTypeList", {
+      storeId: this.storeId,
+    }).then((res) => {
+      this.dishTypeList = res.data.data;
+    });
+  },
+  created() {
+    this.$store.commit("updateDishImg", "");
+  },
   methods: {
     submitForm(formName, data) {
       this.$refs[formName].validate((valid) => {
