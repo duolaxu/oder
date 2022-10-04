@@ -1,11 +1,13 @@
 <template>
   <div class="fillcontain">
     <el-button type="primary" class="addDish" @click="setDialogShow"
-      >新增食品</el-button
+      >新增菜品</el-button
     >
-    <el-dialog title="添加商铺" v-model="dialogShow">
-      <AddDish @getDish="getDish" />
-    </el-dialog>
+    <div v-if="dialogShow">
+      <el-dialog title="添加商铺" v-model="dialogShow">
+        <AddDish @getDish="getDish" />
+      </el-dialog>
+    </div>
     <div class="table_container">
       <el-table
         :data="tableData"
@@ -22,22 +24,22 @@
         <el-table-column type="expand">
           <template #="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="食品名称">
+              <el-form-item label="菜品名称">
                 <span>{{ props.row.dishName }}</span>
               </el-form-item>
-              <el-form-item label="食品ID">
+              <el-form-item label="菜品ID">
                 <span>{{ props.row.dishId }}</span>
               </el-form-item>
-              <el-form-item label="食品价格">
+              <el-form-item label="菜品价格">
                 <span>{{ props.row.dishPrice }}</span>
               </el-form-item>
               <el-form-item label="餐馆ID">
                 <span>{{ props.row.storeId }}</span>
               </el-form-item>
-              <el-form-item label="食品评分">
+              <el-form-item label="菜品评分">
                 <span>{{ props.row.dishScore }}</span>
               </el-form-item>
-              <el-form-item label="食品分类">
+              <el-form-item label="菜品分类">
                 <span>{{ props.row.dishType }}</span>
               </el-form-item>
               <el-form-item label="月销量">
@@ -46,18 +48,20 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="食品名称" prop="dishName"> </el-table-column>
-        <el-table-column label="食品分类" prop="dishType"> </el-table-column>
-        <el-table-column label="食品图片">
+        <el-table-column label="菜品序号" prop="serialNumber">
+        </el-table-column>
+        <el-table-column label="菜品名称" prop="dishName"> </el-table-column>
+        <el-table-column label="菜品分类" prop="dishType"> </el-table-column>
+        <el-table-column label="菜品图片">
           <template #="scope">
             <img :src="baseUrl + scope.row.dishImg" alt="" class="table_img" />
           </template>
         </el-table-column>
-        <el-table-column label="食品价格" prop="dishPrice"> </el-table-column>
+        <el-table-column label="菜品价格" prop="dishPrice"> </el-table-column>
         <el-table-column label="月销量" prop="dishMonthSales">
         </el-table-column>
         <el-table-column label="评分" prop="dishScore"> </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column label="操作" width="260">
           <template #="scope">
             <el-button size="small" @click="handleEdit(scope.row)"
               >编辑</el-button
@@ -68,6 +72,20 @@
               @click="handleChange(scope.$index, scope.row)"
               >{{ scope.row.dishStatus == 1 ? "下架" : "上架" }}</el-button
             >
+            <el-button
+              type="text"
+              style="padding: 0; font-size: 13px"
+              :disabled="scope.$index == 0"
+              @click="moveUp(scope.row, scope.$index)"
+              >上移</el-button
+            >
+            <el-button
+              type="text"
+              style="padding: 0; font-size: 13px"
+              :disabled="scope.$index + 1 == tableData.length"
+              @click="moveDown(scope.row, scope.$index)"
+              >下移</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -77,6 +95,18 @@
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
             <el-button type="primary" @click="changeDish">确定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog v-model="operationVisible" width="30%">
+        <span
+          >确定要将{{ chooseDishName
+          }}{{ operation == 1 ? "下移" : "上移" }}吗？</span
+        >
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="operationVisible = false">取消</el-button>
+            <el-button type="primary" @click="upDownDish">确定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -91,27 +121,27 @@
         </el-pagination>
       </div>
       <div v-if="dialogFormVisible">
-        <el-dialog title="修改食品信息" v-model="dialogFormVisible">
+        <el-dialog title="修改菜品信息" v-model="dialogFormVisible">
           <el-form :model="selectTable" :rules="rules" ref="selectTable">
-            <el-form-item label="食品名称" prop="dishName" label-width="100px">
+            <el-form-item label="菜品名称" prop="dishName" label-width="100px">
               <el-input
                 v-model="selectTable.dishName"
                 auto-complete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="食品分类" prop="dishType" label-width="100px">
+            <el-form-item label="菜品分类" prop="dishType" label-width="100px">
               <el-input
                 v-model="selectTable.dishType"
                 auto-complete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="食品图片" prop="dishImg" label-width="100px">
+            <el-form-item label="菜品图片" prop="dishImg" label-width="100px">
               <UploadImg
                 :imgPath="selectTable.dishImg"
                 :type="status.dishImg"
               />
             </el-form-item>
-            <el-form-item label="食品价格" prop="dishPrice" label-width="100px">
+            <el-form-item label="菜品价格" prop="dishPrice" label-width="100px">
               <el-input
                 v-model="selectTable.dishPrice"
                 auto-complete="off"
@@ -131,7 +161,12 @@
 </template>
 
 <script>
-import { getDishList, updateDish, changeDishStatus } from "../../api";
+import {
+  getDishList,
+  updateDish,
+  changeDishStatus,
+  updateDishSerial,
+} from "../../api";
 import UploadImg from "../../components/uploadImg";
 import { imgStatus, baseUrl } from "../../static";
 import AddDish from "./addDish.vue";
@@ -139,6 +174,11 @@ import AddDish from "./addDish.vue";
 export default {
   data() {
     return {
+      operateData: {},
+      operateIndex: -1,
+      operationVisible: false,
+      chooseDishName: "",
+      operation: 1, // -1上移，1下移
       storeId: this.$store.state.storeId,
       dialogShow: false,
       dialogVisible: false,
@@ -154,10 +194,10 @@ export default {
       selectTable: {},
       rules: {
         dishName: [
-          { required: true, message: "请输入食品名称", trigger: "blur" },
+          { required: true, message: "请输入菜品名称", trigger: "blur" },
         ],
         dishType: [
-          { required: true, message: "请输入食品分类", trigger: "blur" },
+          { required: true, message: "请输入菜品分类", trigger: "blur" },
         ],
         dishPrice: [{ required: true, message: "请输入菜品价格" }],
         dishImg: [
@@ -169,23 +209,27 @@ export default {
   watch: {
     dialogFormVisible(value) {
       if (!value) {
-        getDishList("/getDishList", {
-          storeId: this.storeId,
-        }).then((res) => {
-          this.tableData = res.data.data;
-          this.count = res.data.data.length;
-          // this.dialogShow = !this.dialogShow;
-        });
+        this.getDishData();
+      }
+    },
+    operationVisible(value) {
+      if (!value) {
+        this.getDishData();
+      }
+    },
+    dialogVisible(value) {
+      if (!value) {
+        this.getDishData();
+      }
+    },
+    dialogShow(value) {
+      if (!value) {
+        this.getDishData();
       }
     },
   },
   created() {
-    getDishList("/getDishList", {
-      storeId: this.storeId,
-    }).then((res) => {
-      this.tableData = res.data.data;
-      this.count = res.data.data.length;
-    });
+    this.getDishData();
   },
   computed: {},
   components: {
@@ -193,18 +237,19 @@ export default {
     AddDish,
   },
   methods: {
+    getDishData() {
+      getDishList("/getDishList", {
+        storeId: this.storeId,
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.count = res.data.data.length;
+      });
+    },
     getDish(data) {
       if (data == "close") {
         this.dialogShow = !this.dialogShow;
       } else {
         this.dialogShow = !this.dialogShow;
-        // getDishList("/getDishList", {
-        //   storeId: this.storeId,
-        // }).then((res) => {
-        //   this.tableData = res.data.data;
-        //   this.count = res.data.data.length;
-        //   this.dialogShow = !this.dialogShow;
-        // });
       }
     },
     setDialogShow() {
@@ -225,12 +270,6 @@ export default {
             dishMonthSales: this.selectTable.dishMonthSales,
           }).then(() => {
             this.dialogFormVisible = false;
-            // getDishList("/getDishList", {
-            //   storeId: this.storeId,
-            // }).then((res) => {
-            //   this.tableData = res.data.data;
-            //   this.count = res.data.data.length;
-            // });
           });
         } else {
           return false;
@@ -238,13 +277,7 @@ export default {
       });
     },
     handleCancle() {
-      // getDishList("/getDishList", {
-      //   storeId: this.storeId,
-      // }).then((res) => {
-      //   this.tableData = res.data.data;
-      //   this.count = res.data.data.length;
       this.dialogFormVisible = false;
-      // });
     },
     handleCurrentChange() {},
     handleEdit(data) {
@@ -263,12 +296,42 @@ export default {
         dishStatus: this.dishData.dishStatus == 1 ? "0" : "1",
       }).then(() => {
         this.dialogVisible = false;
-        getDishList("/getDishList", {
-          storeId: this.storeId,
-        }).then((res) => {
-          this.tableData = res.data.data;
-          this.count = res.data.data.length;
-        });
+      });
+    },
+    moveUp(data, index) {
+      this.operation = -1;
+      this.chooseDishName = data.dishName;
+      this.operationVisible = true;
+      this.operateData = data;
+      this.operateIndex = index;
+      // let dish = this.tableData.splice(index, 1);
+      // this.tableData.splice(index - 1, 0, dish[0]);
+    },
+    moveDown(data, index) {
+      this.operation = 1;
+      this.chooseDishName = data.dishName;
+      this.operationVisible = true;
+      this.operateData = data;
+      this.operateIndex = index;
+      // let dish = this.tableData.splice(index, 1);
+      // this.tableData.splice(index + 1, 0, dish[0]);
+    },
+    upDownDish() {
+      updateDishSerial("/updateDishSerial", {
+        storeId: this.storeId,
+        serialNumber: this.operateIndex + 1, //数据库存储数据下标从1开始
+        operationType: this.operation,
+        dishId_1: this.tableData[this.operateIndex].dishId,
+        dishId_2: this.tableData[this.operateIndex + this.operation].dishId,
+      }).then(() => {
+        if (this.operation == 1) {
+          let dish = this.tableData.splice(this.operateIndex, 1);
+          this.tableData.splice(this.operateIndex + 1, 0, dish[0]);
+        } else {
+          let dish = this.tableData.splice(this.operateIndex, 1);
+          this.tableData.splice(this.operateIndex - 1, 0, dish[0]);
+        }
+        this.operationVisible = false;
       });
     },
   },
