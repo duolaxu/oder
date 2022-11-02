@@ -5,7 +5,7 @@
     >
     <div v-if="dialogShow">
       <el-dialog title="添加商铺" v-model="dialogShow">
-        <AddDish @getDish="getDish" />
+        <AddDish :dishListLength="count" @getDish="getDish" />
       </el-dialog>
     </div>
     <div class="table_container">
@@ -304,8 +304,6 @@ export default {
       this.operationVisible = true;
       this.operateData = data;
       this.operateIndex = index;
-      // let dish = this.tableData.splice(index, 1);
-      // this.tableData.splice(index - 1, 0, dish[0]);
     },
     moveDown(data, index) {
       this.operation = 1;
@@ -313,8 +311,6 @@ export default {
       this.operationVisible = true;
       this.operateData = data;
       this.operateIndex = index;
-      // let dish = this.tableData.splice(index, 1);
-      // this.tableData.splice(index + 1, 0, dish[0]);
     },
     upDownDish() {
       updateDishSerial("/updateDishSerial", {

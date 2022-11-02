@@ -55,12 +55,14 @@ import UploadImg from "../../components/uploadImg";
 import { imgStatus } from "../../static";
 import { addNewDish, getDishTypeList } from "../../api";
 export default {
+  props: ["dishListLength"],
   data() {
     return {
       status: imgStatus,
       storeId: this.$store.state.storeId,
       city: {},
       formData: {},
+      dishPaperLength: this.dishListLength,
       rules: {
         dishName: [
           { required: true, message: "请输入食品名称", trigger: "blur" },
@@ -100,6 +102,7 @@ export default {
             dishPrice: data.dishPrice,
             dishImg: this.$store.state.dishImg,
             storeId: this.storeId,
+            serialNumber: this.dishPaperLength + 1,
           }).then((res) => {
             this.$emit("getDish", res); // 通知父组件重新拉取数据
           });
