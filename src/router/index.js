@@ -8,7 +8,10 @@ import ShopList from "@/page/shopList";
 import CustomerList from "@/page/customerList/index";
 import FoodList from "@/page/foodList/index";
 import MerchantList from "@/page/merchantList/index";
-import IncomeChart from "@/page/incomeChart/index"
+import IncomeChart from "@/page/incomeChart/index";
+import RecentHouse from "@/page/recentHouse/index";
+import SecondHand from "@/page/secondHand/index";
+import Recruitment from "@/page/recruitment/index";
 
 const routes = [
 	{
@@ -50,6 +53,21 @@ const routes = [
 			component: IncomeChart,
 			name: "IncomeChart",
 			meta: ['收入流水'],
+		}, {
+			path: '/recentHouse',
+			component: RecentHouse,
+			name: "recentHouse",
+			meta: ['房屋信息'],
+		}, {
+			path: '/secondHand',
+			component: SecondHand,
+			name: "secondHand",
+			meta: ['二手物品'],
+		}, {
+			path: '/recruitment',
+			component: Recruitment,
+			name: "recruitment",
+			meta: ['职位信息'],
 		}]
 	},
 	{

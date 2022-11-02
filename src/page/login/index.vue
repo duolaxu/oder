@@ -66,8 +66,8 @@ export default {
               if (res.data.code != 0) {
                 this.$message.error(res.data.msg + "，请重新输入");
               } else {
-                let data = res.data.data;
-                setCookie("username", data.merchantName, 30, "/");
+                let data = res.data.data.data;
+                setCookie("username", data.adminName, 30, "/");
                 setCookie("merchantPhone", data.merchantPhone, 30, "/");
                 setCookie("storeId", data.storeId, 30, "/");
                 setCookie(
@@ -78,10 +78,10 @@ export default {
                 );
                 setCookie("storeName", data.storeName, 30, "/");
                 setCookie("permission", data.permission, 30, "/");
-                setCookie("headImg", data.headImg, 30, "/");
-                this.$store.commit("updateRolePermsisson", data.permission);
+                setCookie("headImg", data.userImg, 30, "/");
+                this.$store.commit("updateRolePermission", data.permission);
                 this.$store.commit("updateStoreId", data.storeId);
-                this.$store.commit("updateHeadImg", data.headImg);
+                this.$store.commit("updateHeadImg", data.userImg);
                 this.$router.push("/home");
               }
             });
