@@ -69,11 +69,11 @@
         <el-table-column label="用户Id" prop="userId"> </el-table-column>
         <el-table-column label="地区" width="115">
           <template #="props">
-            <ElDropdown :disabled="props.row.region != '' ? true : false">
+            <ElDropdown :disabled="props.row.region != null ? true : false">
               <span class="el-dropdown-link">
-                {{ props.row.region == "" ? "区域选择" : props.row.region }}
+                {{ props.row.region == null ? "区域选择" : props.row.region }}
                 <el-icon class="el-icon--right">
-                  <div v-if="props.row.region == ''">
+                  <div v-if="props.row.region == null">
                     <ArrowDown />
                   </div>
 

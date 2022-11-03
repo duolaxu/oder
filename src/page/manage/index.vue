@@ -11,14 +11,14 @@
           active-text-color="#3190e8"
         >
           <el-menu-item index="home"> 首页</el-menu-item>
-          <el-menu-item index="merchantList">商户列表</el-menu-item>
+          <!-- <el-menu-item index="merchantList">商户列表</el-menu-item>
           <el-menu-item index="customerList">顾客列表</el-menu-item>
           <el-menu-item index="foodList">食品列表</el-menu-item>
-          <el-menu-item index="shopList">商铺列表</el-menu-item>
+          <el-menu-item index="shopList">商铺列表</el-menu-item> -->
           <el-menu-item index="recentHouse">房屋信息</el-menu-item>
           <el-menu-item index="secondHand">二手物品</el-menu-item>
           <el-menu-item index="recruitment">职位信息</el-menu-item>
-          <el-menu-item index="incomeChart">收入流水</el-menu-item>
+          <!-- <el-menu-item index="incomeChart">收入流水</el-menu-item> -->
         </el-menu>
       </el-col>
       <el-col :span="20" style="height: 100%; overflow: auto">

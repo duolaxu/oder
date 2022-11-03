@@ -73,21 +73,13 @@
           <template #="props">
             <ElDropdown :disabled="props.row.region != '' ? true : false">
               <span class="el-dropdown-link">
-                {{ props.row.region == "" ? "区域选择" : props.row.region }}
+                {{ props.row.region == null ? "区域选择" : props.row.region }}
                 <el-icon class="el-icon--right">
-                  <div v-if="props.row.region == ''">
+                  <div v-if="props.row.region == null">
                     <ArrowDown />
                   </div>
-
-                  <!-- <ArrowDown  />
-                  {{ props.row.region == ''?'':<ArrowDown />
-                  }} -->
                 </el-icon>
               </span>
-              <!-- <ElDropdownMenu>
-                    <ElDropdownItem key="{}">{{ regionArr[0] }}</ElDropdownItem>
-                </ElDropdownMenu> -->
-              <!-- <div :v-for="(item, index) in regionArr" :key="item">{{item}}</div> -->
               <template #dropdown>
                 <el-dropdown-menu
                   #="dropdown"
@@ -101,11 +93,6 @@
                     @click="getVal(props, item)"
                   ></el-dropdown-item>
                 </el-dropdown-menu>
-                <!-- <ElDropdownMenu>
-                    <ElDropdownItem >
-                        <span :v-for="(item, index) in regionArr" :key="item">{{item}}</span>
-                    </ElDropdownItem>
-                </ElDropdownMenu> -->
               </template>
             </ElDropdown>
           </template>

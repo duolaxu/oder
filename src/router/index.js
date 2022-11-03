@@ -4,11 +4,11 @@ import { getCookie } from "../utils/cookie"
 import Login from "@/page/login/index";
 import Manage from "@/page/manage/index";
 import Home from "@/page/home/index";
-import ShopList from "@/page/shopList";
-import CustomerList from "@/page/customerList/index";
-import FoodList from "@/page/foodList/index";
-import MerchantList from "@/page/merchantList/index";
-import IncomeChart from "@/page/incomeChart/index";
+// import ShopList from "@/page/shopList";
+// import CustomerList from "@/page/customerList/index";
+// import FoodList from "@/page/foodList/index";
+// import MerchantList from "@/page/merchantList/index";
+// import IncomeChart from "@/page/incomeChart/index";
 import RecentHouse from "@/page/recentHouse/index";
 import SecondHand from "@/page/secondHand/index";
 import Recruitment from "@/page/recruitment/index";
@@ -28,32 +28,34 @@ const routes = [
 			component: Home,
 			name: "Home",
 			meta: ["首页"],
-		}, {
-			path: '/merchantList',
-			component: MerchantList,
-			name: "MerchantList",
-			meta: ['商户列表'],
-		}, {
-			path: '/shopList',
-			component: ShopList,
-			name: "ShopList",
-			meta: ['商铺列表'],
-		}, {
-			path: '/customerList',
-			component: CustomerList,
-			name: "CustomerList",
-			meta: ['顾客列表'],
-		}, {
-			path: '/foodList',
-			component: FoodList,
-			name: "FoodList",
-			meta: ['食品列表'],
-		}, {
-			path: '/incomeChart',
-			component: IncomeChart,
-			name: "IncomeChart",
-			meta: ['收入流水'],
-		}, {
+		},
+		// {
+		// 	path: '/merchantList',
+		// 	component: MerchantList,
+		// 	name: "MerchantList",
+		// 	meta: ['商户列表'],
+		// }, {
+		// 	path: '/shopList',
+		// 	component: ShopList,
+		// 	name: "ShopList",
+		// 	meta: ['商铺列表'],
+		// }, {
+		// 	path: '/customerList',
+		// 	component: CustomerList,
+		// 	name: "CustomerList",
+		// 	meta: ['顾客列表'],
+		// }, {
+		// 	path: '/foodList',
+		// 	component: FoodList,
+		// 	name: "FoodList",
+		// 	meta: ['食品列表'],
+		// }, {
+		// 	path: '/incomeChart',
+		// 	component: IncomeChart,
+		// 	name: "IncomeChart",
+		// 	meta: ['收入流水'],
+		// }, 
+		{
 			path: '/recentHouse',
 			component: RecentHouse,
 			name: "recentHouse",

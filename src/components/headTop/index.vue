@@ -9,14 +9,14 @@
       <img :src="headImg" class="avator" />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="changeHeadImg">
+          <!-- <el-dropdown-item command="changeHeadImg">
             <UploadImg
               :isShowImg="isShowImg"
               :type="status"
               :imgDes="imgText"
               @updateHeadImg="updateHeadImg"
             />
-          </el-dropdown-item>
+          </el-dropdown-item> -->
           <el-dropdown-item command="signout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -27,7 +27,7 @@
 <script>
 import { removeAllCookie } from "../../utils/cookie";
 import { baseUrl, imgStatus } from "../../static";
-import UploadImg from "../uploadImg";
+// import UploadImg from "../uploadImg";
 export default {
   data() {
     return {
@@ -38,7 +38,7 @@ export default {
     };
   },
   components: {
-    UploadImg,
+    // UploadImg,
   },
   created() {},
   computed: {},
