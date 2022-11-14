@@ -28,6 +28,25 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog title="理由" v-model="dialogReason" width="30%">
+      <div style="display: flex; align-items: center">
+        <el-input
+          :model-value="inputReason"
+          @input="bindInputReason"
+          maxlength="40"
+        />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogReason = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="changeAuditStatus(2, data, inputReason)"
+            >确定</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
     <div class="table_container">
       <el-table
         :data="tableData"
@@ -76,16 +95,8 @@
                   <div v-if="props.row.region == null">
                     <ArrowDown />
                   </div>
-
-                  <!-- <ArrowDown  />
-                  {{ props.row.region == ''?'':<ArrowDown />
-                  }} -->
                 </el-icon>
               </span>
-              <!-- <ElDropdownMenu>
-                    <ElDropdownItem key="{}">{{ regionArr[0] }}</ElDropdownItem>
-                </ElDropdownMenu> -->
-              <!-- <div :v-for="(item, index) in regionArr" :key="item">{{item}}</div> -->
               <template #dropdown>
                 <el-dropdown-menu
                   #="dropdown"
@@ -99,11 +110,6 @@
                     @click="getVal(props, item)"
                   ></el-dropdown-item>
                 </el-dropdown-menu>
-                <!-- <ElDropdownMenu>
-                    <ElDropdownItem >
-                        <span :v-for="(item, index) in regionArr" :key="item">{{item}}</span>
-                    </ElDropdownItem>
-                </ElDropdownMenu> -->
               </template>
             </ElDropdown>
           </template>
@@ -122,9 +128,6 @@
             </div>
           </template>
         </el-table-column>
-        <!-- <template #="props">
-            <el-table-column label="关键字段" prop="searchKey"> </el-table-column>
-          </template> -->
 
         <el-table-column label="审核状态">
           <template #="scope">
@@ -136,25 +139,32 @@
             <el-button
               :disabled="scope.row.auditStatus == 0 ? false : true"
               size="small"
-              @click="changeAuditStatus(1, scope.row)"
+              @click="changeAuditStatus(1, scope.row, '')"
               >通过</el-button
             >
             <el-button
               size="small"
               type="danger"
-              @click="changeAuditStatus(2, scope.row)"
+              @click="setHouseId(scope.row)"
               :disabled="scope.row.auditStatus == 0 ? false : true"
               >拒绝</el-button
             >
             <el-button
               :disabled="scope.row.auditStatus == 1 ? false : true"
               size="small"
-              @click="changeAuditStatus(-1, scope.row)"
+              @click="changeAuditStatus(-1, scope.row, '')"
               >下架</el-button
             >
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        background
+        @current-change="changeCurrentPage"
+        :total="total"
+        :current-page="currentPage"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -168,6 +178,9 @@ import { ElDropdown } from "element-plus";
 export default {
   data() {
     return {
+      pagesize: 10,
+      total: 0,
+      currentPage: 1,
       auditStatus: {
         0: "待审核",
         1: "审核通过",
@@ -177,8 +190,6 @@ export default {
       baseUrl,
       tableData: [],
       expendRow: "",
-      currentPage: 0,
-      count: 1,
       regionArr: [],
       dialogVisible: false,
       regionName: "",
@@ -186,6 +197,9 @@ export default {
       inputValue: "",
       isInput: false,
       inputDislog: false,
+      dialogReason: false,
+      inputReason: "",
+      data: 0,
     };
   },
   components: {
@@ -194,7 +208,11 @@ export default {
     // ElDropdownItem,
     // ElDropdownMenu,
   },
-  watch: {},
+  watch: {
+    currentPage() {
+      this.getHouseAll();
+    },
+  },
   created() {
     postApi("/getCityArea", {
       cityCode: 510100,
@@ -206,17 +224,34 @@ export default {
       });
       this.regionArr = area;
     });
-    postApi("/getHousesAll", {
-      houseType: "全部",
-      region: "全部",
-    }).then((res) => {
-      this.tableData = res.data.data;
-    });
+    this.getHouseAll();
   },
   computed: {},
   methods: {
+    setHouseId(data) {
+      this.data = data;
+      this.dialogReason = true;
+    },
+    changeCurrentPage(e) {
+      console.log(e);
+      this.currentPage = e;
+    },
+    getHouseAll() {
+      postApi("/getHousesAll", {
+        houseType: "全部",
+        region: "全部",
+        firstIndex: (this.currentPage - 1) * 10,
+        endIndex: this.currentPage * 10,
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.total = res.data.total[0]["count(houseId)"];
+      });
+    },
     bindInputValue(e) {
       this.inputValue = e;
+    },
+    bindInputReason(e) {
+      this.inputReason = e;
     },
     changeSearchKey() {
       postApi("/changeSearchKey", {
@@ -226,12 +261,7 @@ export default {
       }).then(() => {
         this.dialogVisible = false;
         this.inputValue = "";
-        postApi("/getHousesAll", {
-          houseType: "全部",
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getHouseAll();
       });
     },
     changeInputVal(data) {
@@ -251,25 +281,17 @@ export default {
         region: this.regionName,
       }).then(() => {
         this.inputDislog = false;
-        postApi("/getHousesAll", {
-          houseType: "全部",
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getHouseAll();
       });
     },
-    changeAuditStatus(status, data) {
+    changeAuditStatus(status, data, reason) {
       postApi("/updateHousing", {
         auditStatus: status,
         houseId: data.houseId,
+        rejectReason: reason == "" ? "" : reason,
       }).then(() => {
-        postApi("/getHousesAll", {
-          houseType: "全部",
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getHouseAll();
+        this.dialogReason = false;
       });
     },
     expand() {},

@@ -1,4 +1,4 @@
-# testvue3
+# manageSystem
 
 ## Project setup
 ```
@@ -22,5 +22,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-# oder
-点餐小程序

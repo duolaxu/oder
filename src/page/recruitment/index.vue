@@ -28,6 +28,26 @@
         </span>
       </template>
     </el-dialog>
+
+    <el-dialog title="理由" v-model="dialogReason" width="30%">
+      <div style="display: flex; align-items: center">
+        <el-input
+          :model-value="inputReason"
+          @input="bindInputReason"
+          maxlength="40"
+        />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogReason = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="changeAuditStatus(2, data, inputReason)"
+            >确定</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
     <div class="table_container">
       <el-table
         :data="tableData"
@@ -71,7 +91,7 @@
 
         <el-table-column label="地区" width="115">
           <template #="props">
-            <ElDropdown :disabled="props.row.region != '' ? true : false">
+            <ElDropdown :disabled="props.row.region != null ? true : false">
               <span class="el-dropdown-link">
                 {{ props.row.region == null ? "区域选择" : props.row.region }}
                 <el-icon class="el-icon--right">
@@ -123,25 +143,32 @@
             <el-button
               :disabled="scope.row.auditStatus == 0 ? false : true"
               size="small"
-              @click="changeAuditStatus(1, scope.row)"
+              @click="changeAuditStatus(1, scope.row, '')"
               >通过</el-button
             >
             <el-button
               size="small"
               type="danger"
-              @click="changeAuditStatus(2, scope.row)"
+              @click="setRecruit(scope.row)"
               :disabled="scope.row.auditStatus == 0 ? false : true"
               >拒绝</el-button
             >
             <el-button
               :disabled="scope.row.auditStatus == 1 ? false : true"
               size="small"
-              @click="changeAuditStatus(-1, scope.row)"
+              @click="changeAuditStatus(-1, scope.row, '')"
               >下架</el-button
             >
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        background
+        @current-change="changeCurrentPage"
+        :total="total"
+        :current-page="currentPage"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -154,6 +181,9 @@ import { ArrowDown } from "@element-plus/icons-vue";
 export default {
   data() {
     return {
+      pagesize: 10,
+      total: 0,
+      currentPage: 1,
       auditStatus: {
         0: "待审核",
         1: "审核通过",
@@ -163,7 +193,6 @@ export default {
       baseUrl,
       tableData: [],
       expendRow: "",
-      currentPage: 0,
       count: 1,
       regionArr: [],
       dialogVisible: false,
@@ -172,9 +201,16 @@ export default {
       inputValue: "",
       isInput: false,
       inputDislog: false,
+      dialogReason: false,
+      inputReason: "",
+      data: 0,
     };
   },
-  watch: {},
+  watch: {
+    currentPage() {
+      this.getRecruitAll();
+    },
+  },
   created() {
     postApi("/getCityArea", {
       cityCode: 510100,
@@ -186,15 +222,28 @@ export default {
       });
       this.regionArr = area;
     });
-    postApi("/getRecruitAll", {
-      region: "全部",
-    }).then((res) => {
-      this.tableData = res.data.data;
-    });
+    this.getRecruitAll();
   },
   computed: {},
   components: { ArrowDown },
   methods: {
+    setRecruit(data) {
+      this.data = data;
+      this.dialogReason = true;
+    },
+    bindInputReason(e) {
+      this.inputReason = e;
+    },
+    getRecruitAll() {
+      postApi("/getRecruitAll", {
+        region: "全部",
+        firstIndex: (this.currentPage - 1) * 10,
+        endIndex: this.currentPage * 10,
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.total = res.data.total[0]["count(recruitId)"];
+      });
+    },
     bindInputValue(e) {
       this.inputValue = e;
     },
@@ -206,11 +255,7 @@ export default {
       }).then(() => {
         this.dialogVisible = false;
         this.inputValue = "";
-        postApi("/getRecruitAll", {
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getRecruitAll();
       });
     },
     changeInputVal(data) {
@@ -230,23 +275,17 @@ export default {
         region: this.regionName,
       }).then(() => {
         this.inputDislog = false;
-        postApi("/getRecruitAll", {
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getRecruitAll();
       });
     },
-    changeAuditStatus(status, data) {
+    changeAuditStatus(status, data, reason) {
       postApi("/updateRecruit", {
         auditStatus: status,
         recruitId: data.recruitId,
+        rejectReason: reason == "" ? "" : reason,
       }).then(() => {
-        postApi("/getRecruitAll", {
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getRecruitAll();
+        this.dialogReason=false;
       });
     },
     expand() {},

@@ -1,4 +1,4 @@
-export const baseUrl = 'http://43.138.240.41:9090';
+export const baseUrl = 'https://duolago.cn';
 export const imgStatus = {
     headImg: 0,
     dishImg: 1,

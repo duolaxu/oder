@@ -14,6 +14,8 @@
           <el-menu-item index="recentHouse">房屋信息</el-menu-item>
           <el-menu-item index="secondHand">二手物品</el-menu-item>
           <el-menu-item index="recruitment">职位信息</el-menu-item>
+          <el-menu-item index="report">举报反馈</el-menu-item>
+          <el-menu-item index="feedback">用户体验反馈</el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="20" style="height: 100%; overflow: auto">

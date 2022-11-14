@@ -15,6 +15,27 @@
         </span>
       </template>
     </el-dialog>
+
+    <el-dialog title="理由" v-model="dialogReason" width="30%">
+      <div style="display: flex; align-items: center">
+        <el-input
+          :model-value="inputReason"
+          @input="bindInputReason"
+          maxlength="40"
+        />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogReason = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="changeAuditStatus(2, data, inputReason)"
+            >确定</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
+
     <div class="table_container">
       <el-table
         :data="tableData"
@@ -77,25 +98,32 @@
             <el-button
               :disabled="scope.row.auditStatus == 0 ? false : true"
               size="small"
-              @click="changeAuditStatus(1, scope.row)"
+              @click="changeAuditStatus(1, scope.row, '')"
               >通过</el-button
             >
             <el-button
               size="small"
               type="danger"
-              @click="changeAuditStatus(2, scope.row)"
+              @click="setGoods(scope.row)"
               :disabled="scope.row.auditStatus == 0 ? false : true"
               >拒绝</el-button
             >
             <el-button
               :disabled="scope.row.auditStatus == 1 ? false : true"
               size="small"
-              @click="changeAuditStatus(-1, scope.row)"
+              @click="changeAuditStatus(-1, scope.row, '')"
               >下架</el-button
             >
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        background
+        @current-change="changeCurrentPage"
+        :total="total"
+        :current-page="currentPage"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -107,6 +135,9 @@ import { baseUrl } from "../../static";
 export default {
   data() {
     return {
+      pagesize: 10,
+      total: 0,
+      currentPage: 1,
       auditStatus: {
         0: "待审核",
         1: "审核通过",
@@ -116,26 +147,45 @@ export default {
       baseUrl,
       tableData: [],
       expendRow: "",
-      currentPage: 0,
       count: 1,
       goodsId: 0,
       inputValue: "",
       isInput: false,
       dialogVisible: false,
+      dialogReason: false,
+      inputReason: "",
+      data: 0,
     };
   },
-  watch: {},
+  watch: {
+    currentPage() {
+      this.getHouseAll();
+    },
+  },
   created() {
-    postApi("/getSecondHandAll", {
-      houseType: "全部",
-      region: "全部",
-    }).then((res) => {
-      this.tableData = res.data.data;
-    });
+    this.getGoodsAll();
   },
   computed: {},
   components: {},
   methods: {
+    setGoods(data) {
+      this.data = data;
+      this.dialogReason = true;
+    },
+    bindInputReason(e) {
+      this.inputReason = e;
+    },
+    getGoodsAll() {
+      postApi("/getSecondHandAll", {
+        houseType: "全部",
+        region: "全部",
+        firstIndex: (this.currentPage - 1) * 10,
+        endIndex: this.currentPage * 10,
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.total = res.data.total[0]["count(goodsId)"];
+      });
+    },
     bindInputValue(e) {
       this.inputValue = e;
     },
@@ -147,11 +197,7 @@ export default {
       }).then(() => {
         this.dialogVisible = false;
         this.inputValue = "";
-        postApi("/getSecondHandAll", {
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getGoodsAll();
       });
     },
     changeInputVal(data) {
@@ -159,17 +205,14 @@ export default {
       this.inputValue = data.row.searchKey;
       this.dialogVisible = true;
     },
-    changeAuditStatus(status, data) {
+    changeAuditStatus(status, data, reason) {
       postApi("/updateSecondHand", {
         auditStatus: status,
         houseId: data.houseId,
+        rejectReason: reason == "" ? "" : reason,
       }).then(() => {
-        postApi("/getSecondHandAll", {
-          houseType: "全部",
-          region: "全部",
-        }).then((res) => {
-          this.tableData = res.data.data;
-        });
+        this.getGoodsAll();
+        this.dialogReason = false;
       });
     },
     expand() {},
