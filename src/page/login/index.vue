@@ -29,6 +29,27 @@
         </el-form>
       </section>
     </transition>
+    <div
+      style="
+        position: absolute;
+        width: 100%;
+        height: 50px;
+        bottom: 0px;
+        left: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      "
+    >
+      <img
+        style="width: 15px; height: 15px"
+        src="https://duolago.cn/icon/beian.png"
+      />
+      <a href="https://beian.miit.gov.cn" target="_blank"
+        >&nbsp;蜀ICP备2022025866号 武侯区哆啦信息咨询服务部版权所有</a
+      >
+    </div>
   </div>
 </template>
 
@@ -99,8 +120,17 @@ export default {
 </script>
 
 <style scoped>
+a:hover {
+  color: red;
+}
+a {
+  color: white;
+}
 .login_page {
   background-color: #324057;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .manage_tip {
   position: absolute;
@@ -114,12 +144,7 @@ export default {
 }
 .form_contianer {
   width: 320px;
-  height: 210px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -105px;
-  margin-left: -160px;
+  height: 140px;
   padding: 25px;
   border-radius: 5px;
   text-align: center;

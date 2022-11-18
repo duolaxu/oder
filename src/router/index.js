@@ -14,6 +14,7 @@ import SecondHand from "@/page/secondHand/index";
 import Recruitment from "@/page/recruitment/index";
 import FeedBack from "@/page/feedback/index";
 import Report from "@/page/report/index";
+import Pendant from "@/page/pendant/index";
 
 const routes = [
 	{
@@ -72,16 +73,21 @@ const routes = [
 			component: Recruitment,
 			name: "recruitment",
 			meta: ['职位信息'],
-		},{
+		}, {
 			path: '/feedback',
 			component: FeedBack,
 			name: "feedback",
 			meta: ['使用体验反馈'],
-		},{
+		}, {
 			path: '/report',
 			component: Report,
 			name: "report",
 			meta: ['举报反馈'],
+		}, {
+			path: '/pendant',
+			component: Pendant,
+			name: "pendant",
+			meta: ['挂件管理'],
 		}]
 	},
 	{

@@ -233,7 +233,6 @@ export default {
       this.dialogReason = true;
     },
     changeCurrentPage(e) {
-      console.log(e);
       this.currentPage = e;
     },
     getHouseAll() {

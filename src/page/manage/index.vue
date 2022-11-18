@@ -10,10 +10,11 @@
           background-color="#324057"
           active-text-color="#3190e8"
         >
-          <el-menu-item index="home"> 首页</el-menu-item>
+          <el-menu-item index="home">首页</el-menu-item>
           <el-menu-item index="recentHouse">房屋信息</el-menu-item>
           <el-menu-item index="secondHand">二手物品</el-menu-item>
           <el-menu-item index="recruitment">职位信息</el-menu-item>
+          <el-menu-item index="pendant">挂件管理</el-menu-item>
           <el-menu-item index="report">举报反馈</el-menu-item>
           <el-menu-item index="feedback">用户体验反馈</el-menu-item>
         </el-menu>
