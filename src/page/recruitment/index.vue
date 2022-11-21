@@ -156,7 +156,7 @@
             <el-button
               :disabled="scope.row.auditStatus == 1 ? false : true"
               size="small"
-              @click="changeAuditStatus(-1, scope.row, '')"
+              @click="changeAuditStatus(3, scope.row, '')"
               >下架</el-button
             >
           </template>
@@ -285,7 +285,8 @@ export default {
         rejectReason: reason == "" ? "" : reason,
       }).then(() => {
         this.getRecruitAll();
-        this.dialogReason=false;
+        this.dialogReason = false;
+        this.inputReason = "";
       });
     },
     expand() {},

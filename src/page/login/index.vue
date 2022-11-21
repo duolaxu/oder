@@ -3,7 +3,7 @@
     <transition name="form-fade" mode="in-out">
       <section class="form_contianer" v-show="showLogin">
         <div class="manage_tip">
-          <p>管理系统</p>
+          <p>哆啦梦</p>
         </div>
         <el-form :model="loginForm" :rules="rules" ref="loginForm">
           <el-form-item prop="username">
@@ -135,8 +135,9 @@ a {
 .manage_tip {
   position: absolute;
   width: 100%;
-  top: -100px;
-  left: 0;
+  height:50px;
+  top: 27%;
+  left: 0px;
 }
 .manage_tip p {
   font-size: 34px;

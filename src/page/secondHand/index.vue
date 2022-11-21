@@ -111,7 +111,7 @@
             <el-button
               :disabled="scope.row.auditStatus == 1 ? false : true"
               size="small"
-              @click="changeAuditStatus(-1, scope.row, '')"
+              @click="changeAuditStatus(3, scope.row, '')"
               >下架</el-button
             >
           </template>
@@ -208,11 +208,12 @@ export default {
     changeAuditStatus(status, data, reason) {
       postApi("/updateSecondHand", {
         auditStatus: status,
-        houseId: data.houseId,
+        goodsId: data.goodsId,
         rejectReason: reason == "" ? "" : reason,
       }).then(() => {
         this.getGoodsAll();
         this.dialogReason = false;
+        this.inputReason = "";
       });
     },
     expand() {},

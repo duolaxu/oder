@@ -152,7 +152,7 @@
             <el-button
               :disabled="scope.row.auditStatus == 1 ? false : true"
               size="small"
-              @click="changeAuditStatus(-1, scope.row, '')"
+              @click="changeAuditStatus(3, scope.row, '')"
               >下架</el-button
             >
           </template>
@@ -291,6 +291,7 @@ export default {
       }).then(() => {
         this.getHouseAll();
         this.dialogReason = false;
+        this.inputReason = "";
       });
     },
     expand() {},
