@@ -5,7 +5,7 @@
         :data="tableData"
         @expand="expand"
         :expand-row-keys="expendRow"
-        :row-key="(row) => row.recruitId"
+        :row-key="(row) => row.feedbackId"
         :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
         style="
           width: 100%;
