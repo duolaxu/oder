@@ -1,16 +1,15 @@
 <template>
-<div id="app" class="fillcontain">
+  <div id="app" class="fillcontain">
     <router-view></router-view>
   </div>
 </template>
-
-<script>
-
+  
+  <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+};
 </script>
-
-<style scoped>
+  
+  <style scoped>
 @import "./style/common.css";
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div>
-    <tendency :sevenDate="sevenDate" :sevenDay="sevenDay"></tendency>
+    <Echart />
   </div>
 </template>
 
 <script>
-import tendency from "@/components/tendency";
+import Echart from "../../components/echart";
 export default {
   data() {
     return {};
   },
   components: {
-    tendency,
+    Echart,
   },
   mounted() {},
   computed: {},
@@ -23,8 +23,4 @@ export default {
 </script>
 
 <style scoped>
-.data_section {
-  padding: 20px;
-  margin-bottom: 40px;
-}
 </style>
