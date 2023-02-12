@@ -240,7 +240,7 @@ export default {
         houseType: "全部",
         region: "全部",
         firstIndex: (this.currentPage - 1) * 10,
-        endIndex: this.currentPage * 10,
+        endIndex: 10,
       }).then((res) => {
         this.tableData = res.data.data;
         this.total = res.data.total[0]["count(houseId)"];
