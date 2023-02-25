@@ -1,17 +1,17 @@
 <template>
   <div>
-    <Echart />
+    <!-- <Echart /> -->
   </div>
 </template>
 
 <script>
-import Echart from "../../components/echart";
+// import Echart from "../../components/echart";
 export default {
   data() {
     return {};
   },
   components: {
-    Echart,
+    // Echart,
   },
   mounted() {},
   computed: {},

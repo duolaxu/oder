@@ -28,7 +28,7 @@ import { Plus } from "@element-plus/icons-vue"; // 引入图标
 import { baseUrl } from "../../static";
 import { setCookie } from "../../utils/cookie";
 export default {
-  props: ["imgPath", "type", "isShowImg", "imgDes"],
+  props: ["imgPath", "type", "isShowImg", "imgDes", "imgSrc"],
   data() {
     return {
       baseUrl,

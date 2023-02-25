@@ -11,11 +11,13 @@
           active-text-color="#3190e8"
         >
           <el-menu-item index="home"> 首页</el-menu-item>
+          <el-menu-item index="collectMoney">收银</el-menu-item>
+          <el-menu-item index="addGoods">添加商品</el-menu-item>
           <el-menu-item index="merchantList" v-if="rolePermission"
             >商户列表</el-menu-item
           >
           <el-menu-item index="customerList">顾客列表</el-menu-item>
-          <el-menu-item index="foodList">食品列表</el-menu-item>
+          <el-menu-item index="foodList">物品列表</el-menu-item>
           <el-menu-item index="shopList" v-if="rolePermission"
             >商铺列表</el-menu-item
           >

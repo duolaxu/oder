@@ -9,10 +9,10 @@
           label-width="110px"
           class="demo-formData"
         >
-          <el-form-item label="食品名称" prop="dishName">
+          <el-form-item label="物品名称" prop="dishName">
             <el-input v-model="formData.dishName"></el-input>
           </el-form-item>
-          <el-form-item label="食品分类" prop="dishType">
+          <el-form-item label="物品分类" prop="dishType">
             <el-select
               v-model="formData.dishType"
               filterable
@@ -20,7 +20,7 @@
               allow-create
               default-first-option
               :reserve-keyword="false"
-              placeholder="选择或添加食品分类"
+              placeholder="选择或添加物品分类"
             >
               <el-option
                 v-for="item in dishTypeList"
@@ -30,10 +30,19 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="食品价格" prop="dishPrice">
+          <el-form-item label="物品价格" prop="dishPrice">
             <el-input v-model="formData.dishPrice"></el-input>
           </el-form-item>
-          <el-form-item label="上传食品图片" label-width="137px" prop="dishImg">
+          <el-form-item label="条形码" prop="shapeCode">
+            <el-input v-model="formData.shapeCode"></el-input>
+          </el-form-item>
+          <el-form-item label="物品数量" prop="repertoryNumber">
+            <el-input v-model="formData.repertoryNumber"></el-input>
+          </el-form-item>
+          <el-form-item label="保质期" prop="expirationDate">
+            <el-input v-model="formData.expirationDate"></el-input>
+          </el-form-item>
+          <el-form-item label="上传物品图片" label-width="137px" prop="dishImg">
             <UploadImg :type="status.dishImg" />
           </el-form-item>
           <el-form-item class="button_submit">
@@ -65,14 +74,14 @@ export default {
       dishPaperLength: this.dishListLength,
       rules: {
         dishName: [
-          { required: true, message: "请输入食品名称", trigger: "blur" },
+          { required: true, message: "请输入物品名称", trigger: "blur" },
         ],
         dishType: [
-          { required: true, message: "请输入食品分类", trigger: "blur" },
+          { required: true, message: "请输入物品分类", trigger: "blur" },
         ],
-        dishPrice: [{ required: true, message: "请输入菜品价格" }],
+        dishPrice: [{ required: true, message: "请输入物品价格" }],
         dishImg: [
-          { required: false, message: "请上传菜品图片", trigger: "blur" },
+          { required: false, message: "请上传物品图片", trigger: "blur" },
         ],
       },
       dishTypeList: [],
@@ -82,6 +91,7 @@ export default {
     UploadImg,
   },
   mounted() {
+    // this.enterKeyUp();
     getDishTypeList("/getDishTypeList", {
       storeId: this.storeId,
     }).then((res) => {
@@ -92,11 +102,20 @@ export default {
     this.$store.commit("updateDishImg", "");
   },
   methods: {
+    // enterKey() {
+    //   console.log("扫码成功");
+    // },
+    // enterKeyUp() {
+    //   document.addEventListener("keyup", this.enterKey);
+    // },
     submitForm(formName, data) {
       this.$refs[formName].validate((valid) => {
         // 表单验证
         if (valid) {
           addNewDish("/addNewDish", {
+            shapeCode: data.shapeCode,
+            repertoryNumber: data.repertoryNumber,
+            expirationDate: data.expirationDate,
             dishName: data.dishName,
             dishType: data.dishType,
             dishPrice: data.dishPrice,

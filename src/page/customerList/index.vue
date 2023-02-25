@@ -13,7 +13,7 @@
       >
         <el-table-column property="customerName" label="顾客微信名" width="220">
         </el-table-column>
-        <el-table-column property="costDishName" label="消费食品">
+        <el-table-column property="costDishName" label="消费物品">
         </el-table-column>
         <el-table-column property="costMoney" label="消费金额">
         </el-table-column>
@@ -48,7 +48,8 @@ export default {
   components: {},
   created() {
     getCustomerList("/getCustomerList", {
-      storeId: 1,
+      // storeId: 1,
+      storeId: 7,
     }).then((res) => {
       this.tableData = res.data.data;
       this.count = res.data.data.length;

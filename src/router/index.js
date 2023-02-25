@@ -8,7 +8,9 @@ import ShopList from "@/page/shopList";
 import CustomerList from "@/page/customerList/index";
 import FoodList from "@/page/foodList/index";
 import MerchantList from "@/page/merchantList/index";
-import IncomeChart from "@/page/incomeChart/index"
+import IncomeChart from "@/page/incomeChart/index";
+import CollectMoney from "@/page/collectMoney/index";
+import AddGoods from "@/page/addGoods/index";
 
 const routes = [
 	{
@@ -25,6 +27,16 @@ const routes = [
 			component: Home,
 			name: "Home",
 			meta: ["首页"],
+		}, {
+			path: '/collectMoney',
+			component: CollectMoney,
+			name: "collectMoney",
+			meta: ['收银'],
+		}, {
+			path: '/addGoods',
+			component: AddGoods,
+			name: "AddGoods",
+			meta: ['添加商品'],
 		}, {
 			path: '/merchantList',
 			component: MerchantList,
@@ -44,7 +56,7 @@ const routes = [
 			path: '/foodList',
 			component: FoodList,
 			name: "FoodList",
-			meta: ['食品列表'],
+			meta: ['物品列表'],
 		}, {
 			path: '/incomeChart',
 			component: IncomeChart,

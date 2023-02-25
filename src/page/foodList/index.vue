@@ -1,7 +1,7 @@
 <template>
   <div class="fillcontain">
     <el-button type="primary" class="addDish" @click="setDialogShow"
-      >新增菜品</el-button
+      >新增物品</el-button
     >
     <div v-if="dialogShow">
       <el-dialog title="添加商铺" v-model="dialogShow">
@@ -24,43 +24,56 @@
         <el-table-column type="expand">
           <template #="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="菜品名称">
+              <el-form-item label="物品名称">
                 <span>{{ props.row.dishName }}</span>
               </el-form-item>
-              <el-form-item label="菜品ID">
+              <el-form-item label="物品ID">
                 <span>{{ props.row.dishId }}</span>
               </el-form-item>
-              <el-form-item label="菜品价格">
+              <el-form-item label="物品价格">
                 <span>{{ props.row.dishPrice }}</span>
               </el-form-item>
               <el-form-item label="餐馆ID">
                 <span>{{ props.row.storeId }}</span>
               </el-form-item>
-              <el-form-item label="菜品评分">
+              <el-form-item label="物品评分">
                 <span>{{ props.row.dishScore }}</span>
               </el-form-item>
-              <el-form-item label="菜品分类">
+              <el-form-item label="物品分类">
                 <span>{{ props.row.dishType }}</span>
               </el-form-item>
               <el-form-item label="月销量">
                 <span>{{ props.row.dishMonthSales }}</span>
               </el-form-item>
+              <el-form-item label="条形码">
+                <span>{{ props.row.shapeCode }}</span>
+              </el-form-item>
+              <el-form-item label="库存余量">
+                <span>{{ props.row.repertoryNumber }}</span>
+              </el-form-item>
+              <el-form-item label="保质期">
+                <span>{{ props.row.expirationDate }}</span>
+              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="菜品序号" prop="serialNumber">
+        <el-table-column label="物品序号" prop="serialNumber">
         </el-table-column>
-        <el-table-column label="菜品名称" prop="dishName"> </el-table-column>
-        <el-table-column label="菜品分类" prop="dishType"> </el-table-column>
-        <el-table-column label="菜品图片">
+        <el-table-column label="物品名称" prop="dishName"> </el-table-column>
+        <el-table-column label="物品分类" prop="dishType"> </el-table-column>
+        <el-table-column label="物品图片">
           <template #="scope">
-            <img :src="baseUrl + scope.row.dishImg" alt="" class="table_img" />
+            <img :src="scope.row.dishImg" alt="" class="table_img" />
           </template>
         </el-table-column>
-        <el-table-column label="菜品价格" prop="dishPrice"> </el-table-column>
-        <el-table-column label="月销量" prop="dishMonthSales">
+        <el-table-column label="物品价格" prop="dishPrice"> </el-table-column>
+        <el-table-column label="库存余量" prop="repertoryNumber">
         </el-table-column>
-        <el-table-column label="评分" prop="dishScore"> </el-table-column>
+        <el-table-column label="保质期" prop="expirationDate">
+        </el-table-column>
+        <!-- <el-table-column label="月销量" prop="dishMonthSales">
+        </el-table-column>
+        <el-table-column label="评分" prop="dishScore"> </el-table-column> -->
         <el-table-column label="操作" width="260">
           <template #="scope">
             <el-button size="small" @click="handleEdit(scope.row)"
@@ -90,7 +103,7 @@
         </el-table-column>
       </el-table>
       <el-dialog v-model="dialogVisible" width="30%">
-        <span>确定要将该菜品{{ dishStatus }}吗？</span>
+        <span>确定要将该物品{{ dishStatus }}吗？</span>
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
@@ -121,27 +134,27 @@
         </el-pagination>
       </div>
       <div v-if="dialogFormVisible">
-        <el-dialog title="修改菜品信息" v-model="dialogFormVisible">
+        <el-dialog title="修改物品信息" v-model="dialogFormVisible">
           <el-form :model="selectTable" :rules="rules" ref="selectTable">
-            <el-form-item label="菜品名称" prop="dishName" label-width="100px">
+            <el-form-item label="物品名称" prop="dishName" label-width="100px">
               <el-input
                 v-model="selectTable.dishName"
                 auto-complete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="菜品分类" prop="dishType" label-width="100px">
+            <el-form-item label="物品分类" prop="dishType" label-width="100px">
               <el-input
                 v-model="selectTable.dishType"
                 auto-complete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="菜品图片" prop="dishImg" label-width="100px">
+            <el-form-item label="物品图片" prop="dishImg" label-width="100px">
               <UploadImg
                 :imgPath="selectTable.dishImg"
                 :type="status.dishImg"
               />
             </el-form-item>
-            <el-form-item label="菜品价格" prop="dishPrice" label-width="100px">
+            <el-form-item label="物品价格" prop="dishPrice" label-width="100px">
               <el-input
                 v-model="selectTable.dishPrice"
                 auto-complete="off"
@@ -188,25 +201,28 @@ export default {
       baseUrl,
       tableData: [],
       expendRow: "",
-      currentPage: 0,
+      currentPage: 1,
       dialogFormVisible: false,
       count: 1,
       selectTable: {},
       rules: {
         dishName: [
-          { required: true, message: "请输入菜品名称", trigger: "blur" },
+          { required: true, message: "请输入物品名称", trigger: "blur" },
         ],
         dishType: [
-          { required: true, message: "请输入菜品分类", trigger: "blur" },
+          { required: true, message: "请输入物品分类", trigger: "blur" },
         ],
-        dishPrice: [{ required: true, message: "请输入菜品价格" }],
+        dishPrice: [{ required: true, message: "请输入物品价格" }],
         dishImg: [
-          { required: false, message: "请上传菜品图片", trigger: "blur" },
+          { required: false, message: "请上传物品图片", trigger: "blur" },
         ],
       },
     };
   },
   watch: {
+    currentPage() {
+      this.getDishData();
+    },
     dialogFormVisible(value) {
       if (!value) {
         this.getDishData();
@@ -231,18 +247,28 @@ export default {
   created() {
     this.getDishData();
   },
+
   computed: {},
   components: {
     UploadImg,
     AddDish,
   },
   methods: {
+    // enterKey(){
+    //   console.log("扫码成功");
+    // },
+    // enterKeyUp() {
+    //   document.addEventListener("keyup", this.enterKey);
+    // },
     getDishData() {
       getDishList("/getDishList", {
         storeId: this.storeId,
+        firstIndex: (this.currentPage - 1) * 20,
+        endIndex: 20,
       }).then((res) => {
         this.tableData = res.data.data;
-        this.count = res.data.data.length;
+        this.count = res.data.total[0]["count(dishId)"];
+        // console.log("SNH = ", res.data.total[0]['count(dishId)']);
       });
     },
     getDish(data) {
@@ -279,7 +305,9 @@ export default {
     handleCancle() {
       this.dialogFormVisible = false;
     },
-    handleCurrentChange() {},
+    handleCurrentChange(e) {
+      this.currentPage = e;
+    },
     handleEdit(data) {
       this.dialogFormVisible = true;
       this.selectTable = data;
