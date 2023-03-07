@@ -77,3 +77,21 @@ export const getShapeCodeApi = async (path, data) => {
     const res = axios.post(`${baseUrl}/order${path}`, data);
     return res;
 }
+
+//更新商品图片
+export const updateDishImg = async (path, data) => {
+    const res = axios.post(`${baseUrl}/order${path}`, data);
+    return res;
+}
+
+// 获取全部跑腿列表
+export const getErrandList = async (path, data) => {
+    const res = axios.post(`${baseUrl}/order${path}`, data);
+    return res;
+}
+
+// 获取全部订单列表
+export const getOrderList = async (path, data) => {
+    const res = axios.post(`${baseUrl}/order${path}`, data);
+    return res;
+}

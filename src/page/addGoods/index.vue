@@ -131,10 +131,6 @@ export default {
           shapeCode: this.shapeCode,
         });
         let data = JSON.parse(res.data.data).data;
-        console.log("返回数据 = ", data);
-        console.log("物品名称 = ", data.goodsName);
-        console.log("物品条形码 = ", data.code);
-        console.log("图片链接 = ", data.imgList[0]);
         this.goodsName = data.goodsName;
         this.goodsImg = data.imgList[0];
         this.$nextTick(() => {
@@ -149,31 +145,6 @@ export default {
           this.$refs.input.focus();
         });
       }
-
-      //   var request = require("request");
-      //   //   var querystring = require("querystring");
-
-      //   var headers = {
-      //     "Content-Type": "application/json;charset=UTF-8",
-      //     "X-Bce-Signature": "AppCode/748de45bb3694a329610216444430bc4",
-      //   };
-
-      //   var url = `https://barcodequery.api.bdymkt.com/bar-code/query?code=${this.shapeCode}`;
-
-      //   var options = {
-      //     url: url,
-      //     method: "POST",
-      //     headers: headers,
-      //   };
-
-      //   request(options, function (error, response, body) {
-      //     if (error !== null) {
-      //       console.log("error:", error);
-      //       return;
-      //     }
-      //     console.log(response.headers);
-      //     console.log(body);
-      //   });
     },
     submitForm(formName, data) {
       this.$refs[formName].validate((valid) => {
@@ -203,13 +174,9 @@ export default {
       });
     },
     async enterKey(event) {
-      // console.log("EVENT = ",event.keyCode);
-      //   console.log("扫码成功");
       if (event.keyCode == 13) {
-        console.log("回车事件发生");
-        console.log(event);
         // this.getShapeCodeApi
-      } else if (event.keyCode == 39) {
+      } else if (event.keyCode == 80) {
         this.submitForm("formData", this.formData);
         this.$nextTick(() => {
           this.$refs.input.focus();

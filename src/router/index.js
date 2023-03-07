@@ -11,6 +11,8 @@ import MerchantList from "@/page/merchantList/index";
 import IncomeChart from "@/page/incomeChart/index";
 import CollectMoney from "@/page/collectMoney/index";
 import AddGoods from "@/page/addGoods/index";
+import Errand from "@/page/errand/index";
+import OrderList from "@/page/orderList/index";
 
 const routes = [
 	{
@@ -62,6 +64,16 @@ const routes = [
 			component: IncomeChart,
 			name: "IncomeChart",
 			meta: ['收入流水'],
+		}, {
+			path: '/errand',
+			component: Errand,
+			name: "Errand",
+			meta: ['跑腿订单'],
+		}, {
+			path: '/orderList',
+			component: OrderList,
+			name: "OrderList",
+			meta: ['订单列表'],
 		}]
 	},
 	{

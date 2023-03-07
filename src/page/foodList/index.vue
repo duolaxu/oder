@@ -22,6 +22,7 @@
         "
       >
         <el-table-column type="expand">
+          <!-- eslint-disable-next-line -->
           <template #="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="物品名称">
@@ -62,6 +63,7 @@
         <el-table-column label="物品名称" prop="dishName"> </el-table-column>
         <el-table-column label="物品分类" prop="dishType"> </el-table-column>
         <el-table-column label="物品图片">
+          <!-- eslint-disable-next-line -->
           <template #="scope">
             <img :src="scope.row.dishImg" alt="" class="table_img" />
           </template>
@@ -75,6 +77,7 @@
         </el-table-column>
         <el-table-column label="评分" prop="dishScore"> </el-table-column> -->
         <el-table-column label="操作" width="260">
+          <!-- eslint-disable-next-line -->
           <template #="scope">
             <el-button size="small" @click="handleEdit(scope.row)"
               >编辑</el-button
@@ -179,6 +182,8 @@ import {
   updateDish,
   changeDishStatus,
   updateDishSerial,
+  // updateDishImg,
+  // getShapeCodeApi,
 } from "../../api";
 import UploadImg from "../../components/uploadImg";
 import { imgStatus, baseUrl } from "../../static";
@@ -265,10 +270,35 @@ export default {
         storeId: this.storeId,
         firstIndex: (this.currentPage - 1) * 20,
         endIndex: 20,
-      }).then((res) => {
+      }).then(async (res) => {
         this.tableData = res.data.data;
         this.count = res.data.total[0]["count(dishId)"];
-        // console.log("SNH = ", res.data.total[0]['count(dishId)']);
+        // console.log("返回数据 = ", res.data.data);
+
+        // 更新物品图片
+        // let dishs = res.data.data;
+        // console.log("dishs = ", dishs);
+        // for (let i = 0; i < dishs.length; i++) {
+        //   setTimeout(async () => {
+        //     const res = await getShapeCodeApi("/getShapeCodeApi", {
+        //       shapeCode: dishs[i].shapeCode,
+        //     });
+        //     let data = JSON.parse(res.data.data).data;
+        //     // console.log("返回数据 = ", data.goodsName+" = ");
+        //     if (data.img == "") {
+        //       updateDishImg("/updateDishImg", {
+        //         dishImg: data.imgList[0],
+        //         shapeCode: dishs[i].shapeCode,
+        //       });
+        //     } else {
+        //       updateDishImg("/updateDishImg", {
+        //         dishImg: data.img,
+        //         shapeCode: dishs[i].shapeCode,
+        //       });
+        //     }
+        //   }, i * 500);
+        // }
+        // console.log("SNH = ", res.data.total[0]["count(dishId)"]);
       });
     },
     getDish(data) {

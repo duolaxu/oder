@@ -11,13 +11,28 @@
         "
         :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
       >
-        <el-table-column property="customerName" label="顾客微信名" width="220">
+        <el-table-column property="customerId" label="顾客ID" width="220">
         </el-table-column>
-        <el-table-column property="costDishName" label="消费物品">
+        <el-table-column property="openId" label="opeId"> </el-table-column>
+        <el-table-column property="nickName" label="消费者昵称">
         </el-table-column>
-        <el-table-column property="costMoney" label="消费金额">
+        <!-- <el-table-column property="userImg" label="顾客头像"> </el-table-column> -->
+        <el-table-column label="顾客头像">
+          <!-- eslint-disable-next-line -->
+          <template #="scope">
+            <img
+              :src="'https://duolago.cn' + scope.row.headImg"
+              alt=""
+              class="table_img"
+            />
+          </template>
         </el-table-column>
-        <el-table-column property="costDate" label="消费日期" width="220">
+        <el-table-column property="registerTime" label="注册日期" width="220">
+          <!-- <el-table-column label="注册日期">
+          <template #="scope">
+            <div>{{ scope.row.registerTime }}</div>
+          </template>
+        </el-table-column> -->
         </el-table-column>
       </el-table>
       <div class="Pagination" style="text-align: left; margin-top: 10px">
@@ -46,17 +61,25 @@ export default {
     };
   },
   components: {},
-  created() {
-    getCustomerList("/getCustomerList", {
-      // storeId: 1,
-      storeId: 7,
-    }).then((res) => {
-      this.tableData = res.data.data;
-      this.count = res.data.data.length;
-    });
+  watch: {
+    currentPage() {
+      this.getCustomer();
+    },
   },
+  created() {},
   methods: {
-    handleCurrentChange() {},
+    handleCurrentChange(e) {
+      this.currentPage = e;
+    },
+    getCustomer() {
+      getCustomerList("/getCustomerList", {
+        firstIndex: (this.currentPage - 1) * 20,
+        endIndex: 20,
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.count = res.data.total[0]["count(customerId)"];
+      });
+    },
   },
 };
 </script>
@@ -64,5 +87,9 @@ export default {
 <style scoped>
 .table_container {
   padding: 20px;
+}
+.table_img {
+  width: 50px;
+  height: 50px;
 }
 </style>

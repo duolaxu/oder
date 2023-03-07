@@ -22,7 +22,10 @@
             >商铺列表</el-menu-item
           >
           <el-menu-item index="incomeChart">收入流水</el-menu-item>
+          <el-menu-item index="Errand">跑腿订单</el-menu-item>
+          <el-menu-item index="OrderList">订单列表</el-menu-item>
         </el-menu>
+        <!-- </el-menu> -->
       </el-col>
       <el-col :span="20" style="height: 100%; overflow: auto">
         <head-top />
